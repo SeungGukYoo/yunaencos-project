@@ -2,6 +2,7 @@
 	import addIcon from '$lib/images/icons/add.svg';
 	import cancelIcon from '$lib/images/icons/close.svg';
 	import backIcon from '$lib/images/icons/keyboard_backspace.svg';
+	import { onMount } from 'svelte';
 
 	import { handleMode } from '../store';
 	let currentPath: string;
@@ -11,6 +12,10 @@
 		handleMode.update((prev) => (prev = path));
 		currentPath = path;
 	}
+
+	onMount(() => {
+		currentPath = window.location.pathname;
+	});
 </script>
 
 <section class="titleContainer">
