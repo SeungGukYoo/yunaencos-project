@@ -4,7 +4,8 @@
 	import { handleMode } from '../store';
 
 	function handleReservedPage() {
-		handleMode.update((prev) => !prev);
+		if ($handleMode === window.location.pathname) return;
+		handleMode.update((prev) => (prev = window.location.pathname));
 	}
 </script>
 
