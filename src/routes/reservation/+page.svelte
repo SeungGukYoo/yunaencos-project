@@ -1,9 +1,25 @@
-<script>
+<script lang="ts">
 	import dropIcon from '$lib/images/icons/arrow_drop_down.svg';
 	import etcIcon from '$lib/images/icons/edit.svg';
 	import minusIcon from '$lib/images/icons/math-minus.svg';
 	import plusIcon from '$lib/images/icons/math-plus.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
+
+	let guestCount = 1;
+	function inCreaseCount(e: MouseEvent) {
+		e.preventDefault();
+		if (guestCount === 99) {
+			alert('maximum guest count is 99');
+		}
+		guestCount += 1;
+	}
+	function deCreaseCount(e: MouseEvent) {
+		e.preventDefault();
+		if (guestCount <= 1) {
+			alert('minimum guest count is 1');
+		}
+		guestCount -= 1;
+	}
 </script>
 
 <section class="addReservationContainer">
@@ -16,7 +32,6 @@
 					id="reservation-name"
 					placeholder="Name"
 					class="nameInputContainer"
-					required
 				/>
 			</label>
 			<label for="reservation-phone">
@@ -26,7 +41,6 @@
 					name="phone"
 					pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
 					placeholder="Phoone"
-					required
 				/>
 			</label>
 			<label>
@@ -38,9 +52,9 @@
 		<div class="reservationMidContainer">
 			<label class="countContainer"
 				>Guest
-				<button class="countBtn"><img src={minusIcon} alt="" /></button>
-				<span>1</span>
-				<button class="countBtn"><img src={plusIcon} alt="" /></button>
+				<button class="countBtn" on:click={deCreaseCount}><img src={minusIcon} alt="" /></button>
+				<span>{guestCount}</span>
+				<button class="countBtn" on:click={inCreaseCount}><img src={plusIcon} alt="" /></button>
 			</label>
 			<div class="dropdownContainer">
 				<div class="dropdownBtn">
