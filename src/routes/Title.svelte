@@ -1,24 +1,31 @@
 <script lang="ts">
 	import addIcon from '$lib/images/icons/add.svg';
 	import cancelIcon from '$lib/images/icons/close.svg';
+	import backIcon from '$lib/images/icons/keyboard_backspace.svg';
 
 	import { handleMode } from '../store';
-	$: path = window.location.pathname;
+	let currentPath: string;
 
 	function handleReservedPage(path: string) {
-		console.log('state', $handleMode, 'window', window.location.pathname);
 		if (path === window.location.pathname) return;
 		handleMode.update((prev) => (prev = path));
+		currentPath = path;
 	}
 </script>
 
 <section class="titleContainer">
-	<a class="addBtn" href="/reservation" on:click={() => handleReservedPage('/reservation')}>
-		<img src={addIcon} alt="add-Icon" /> New Reservation
-	</a>
+	{#if currentPath === '/reservation'}
+		<a class="addBtn" href="/" on:click={() => handleReservedPage('/')}>
+			<img src={backIcon} alt="back-icon" />
+		</a>
+	{:else}
+		<a class="addBtn" href="/reservation" on:click={() => handleReservedPage('/reservation')}>
+			<img src={addIcon} alt="add-Icon" /> New Reservation
+		</a>
+	{/if}
 
 	<div class="title">
-		{#if path === $handleMode}
+		{#if currentPath === '/reservation'}
 			<h1>New Reservation</h1>
 		{:else}
 			<h1>Reservation</h1>
@@ -53,10 +60,6 @@
 		box-shadow: 1px 1px 3px 1px rgba(66, 66, 66, 0.35);
 		cursor: pointer;
 	}
-	.addBtn a {
-		display: flex;
-		align-items: center;
-	}
 
 	.cancelBtn {
 		flex-grow: 0;
@@ -67,7 +70,6 @@
 
 	.title {
 		flex-grow: 2;
-
 		margin: 0;
 	}
 </style>
