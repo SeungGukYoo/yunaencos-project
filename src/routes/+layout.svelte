@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
+	import Title from './Title.svelte';
 	import './styles.css';
-	let data = 'test';
 </script>
 
 <div class="app">
 	<main>
+		<Title />
 		<slot />
 	</main>
 
