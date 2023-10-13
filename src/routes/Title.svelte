@@ -1,28 +1,33 @@
 <script lang="ts">
 	import addIcon from '$lib/images/icons/add.svg';
 	import cancelIcon from '$lib/images/icons/close.svg';
-	import { handleMode } from '../store';
 
-	function handleReservedPage() {
-		if ($handleMode === window.location.pathname) return;
-		handleMode.update((prev) => (prev = window.location.pathname));
+	import { handleMode } from '../store';
+	$: path = window.location.pathname;
+
+	function handleReservedPage(path: string) {
+		console.log('state', $handleMode, 'window', window.location.pathname);
+		if (path === window.location.pathname) return;
+		handleMode.update((prev) => (prev = path));
 	}
 </script>
 
 <section class="titleContainer">
-	<a class="addBtn" href="/reservation" on:click={handleReservedPage}>
+	<a class="addBtn" href="/reservation" on:click={() => handleReservedPage('/reservation')}>
 		<img src={addIcon} alt="add-Icon" /> New Reservation
 	</a>
 
 	<div class="title">
-		{#if $handleMode}
+		{#if path === $handleMode}
 			<h1>New Reservation</h1>
 		{:else}
 			<h1>Reservation</h1>
 		{/if}
 	</div>
 
-	<a class="cancelBtn" href="/" on:click={handleReservedPage}> <img src={cancelIcon} alt="" /></a>
+	<a class="cancelBtn" href="/" on:click={() => handleReservedPage('/')}>
+		<img src={cancelIcon} alt="" /></a
+	>
 </section>
 
 <style>
