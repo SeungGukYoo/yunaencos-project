@@ -1,4 +1,4 @@
-// import type { PageData } from './routes/$types';
+import { writable } from 'svelte/store';
 
 interface ReservedData {
 	name: string;
@@ -48,3 +48,6 @@ export const reservationList: Array<ReservedData> = [
 		etc: ''
 	}
 ];
+
+const isNewAddReservation = false;
+export const handleMode = writable(isNewAddReservation);
