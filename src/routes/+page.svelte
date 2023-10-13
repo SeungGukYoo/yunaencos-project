@@ -1,9 +1,7 @@
-<script>
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import Counter from './Counter.svelte';
+<script lang="ts">
 	import List from './List.svelte';
-	import { default as Header, default as Title } from './Title.svelte';
+
+	import { handleMode } from '../store';
 </script>
 
 <svelte:head>
@@ -12,8 +10,11 @@
 </svelte:head>
 
 <section class="main">
-	<Title />
-	<List />
+	{#if $handleMode}
+		<p>new Reservation page</p>
+	{:else}
+		<List />
+	{/if}
 </section>
 
 <style>
