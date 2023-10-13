@@ -49,5 +49,5 @@ export const reservationList: Array<ReservedData> = [
 	}
 ];
 
-const isNewAddReservation = false;
+const isNewAddReservation = '/';
 export const handleMode = writable(isNewAddReservation);
