@@ -3,15 +3,16 @@
 	import cancelIcon from '$lib/images/icons/close.svg';
 	import { handleMode } from '../store';
 
-	function addNewReservation() {
+	function handleReservedPage() {
 		handleMode.update((prev) => !prev);
 	}
 </script>
 
 <section class="titleContainer">
-	<button class="addBtn" on:click={addNewReservation}>
-		<img src={addIcon} alt="add-Icon" /> New Reservation</button
-	>
+	<a class="addBtn" href="/reservation" on:click={handleReservedPage}>
+		<img src={addIcon} alt="add-Icon" /> New Reservation
+	</a>
+
 	<div class="title">
 		{#if $handleMode}
 			<h1>New Reservation</h1>
@@ -19,7 +20,8 @@
 			<h1>Reservation</h1>
 		{/if}
 	</div>
-	<button class="cancelBtn"><img src={cancelIcon} alt="" /></button>
+
+	<a class="cancelBtn" href="/" on:click={handleReservedPage}> <img src={cancelIcon} alt="" /></a>
 </section>
 
 <style>
@@ -43,6 +45,11 @@
 		display: flex;
 		align-items: center;
 		box-shadow: 1px 1px 3px 1px rgba(66, 66, 66, 0.35);
+		cursor: pointer;
+	}
+	.addBtn a {
+		display: flex;
+		align-items: center;
 	}
 
 	.cancelBtn {
@@ -51,6 +58,7 @@
 		background-color: transparent;
 		margin-right: 12px;
 	}
+
 	.title {
 		flex-grow: 2;
 
