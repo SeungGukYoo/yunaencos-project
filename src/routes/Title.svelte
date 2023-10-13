@@ -1,14 +1,24 @@
-<script>
-	import { page } from '$app/stores';
-	import github from '$lib/images/github.svg';
+<script lang="ts">
 	import addIcon from '$lib/images/icons/add.svg';
 	import cancelIcon from '$lib/images/icons/close.svg';
-	import logo from '$lib/images/svelte-logo.svg';
+	import { handleMode } from '../store';
+
+	function addNewReservation() {
+		handleMode.update((prev) => !prev);
+	}
 </script>
 
 <section class="titleContainer">
-	<button class="addBtn"> <img src={addIcon} alt="add-Icon" /> New Reservation</button>
-	<div class="title"><h1>Reservation</h1></div>
+	<button class="addBtn" on:click={addNewReservation}>
+		<img src={addIcon} alt="add-Icon" /> New Reservation</button
+	>
+	<div class="title">
+		{#if $handleMode}
+			<h1>New Reservation</h1>
+		{:else}
+			<h1>Reservation</h1>
+		{/if}
+	</div>
 	<button class="cancelBtn"><img src={cancelIcon} alt="" /></button>
 </section>
 
