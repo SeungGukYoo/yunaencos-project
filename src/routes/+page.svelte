@@ -1,7 +1,5 @@
 <script lang="ts">
 	import List from './List.svelte';
-
-	import { handleMode } from '../store';
 </script>
 
 <svelte:head>
@@ -10,11 +8,7 @@
 </svelte:head>
 
 <section class="main">
-	{#if $handleMode}
-		<p>new Reservation page</p>
-	{:else}
-		<List />
-	{/if}
+	<List />
 </section>
 
 <style>
