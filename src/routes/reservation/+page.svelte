@@ -1,11 +1,14 @@
 <script lang="ts">
 	import dropIcon from '$lib/images/icons/arrow_drop_down.svg';
-	import etcIcon from '$lib/images/icons/edit.svg';
 	import minusIcon from '$lib/images/icons/math-minus.svg';
 	import plusIcon from '$lib/images/icons/math-plus.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
+	import { handlePopUp } from '../../store';
+	import Popup from './Popup.svelte';
 
+	$: isPopUp = false;
 	let guestCount = 1;
+
 	function inCreaseCount(e: MouseEvent) {
 		e.preventDefault();
 		if (guestCount === 99) {
@@ -20,9 +23,21 @@
 		}
 		guestCount -= 1;
 	}
+	function popUpDate() {
+		if (isPopUp) return;
+		handlePopUp.update((prev: boolean) => {
+			prev = true;
+			return prev;
+		});
+	}
+
+	handlePopUp.subscribe((value) => (isPopUp = value));
 </script>
 
 <section class="addReservationContainer">
+	{#if isPopUp}
+		<Popup />
+	{/if}
 	<form>
 		<div class="reservationTopContainer">
 			<label for="reservation-name">
@@ -44,7 +59,7 @@
 				/>
 			</label>
 			<label>
-				<button type="button" class="dateChoiceBtn">
+				<button type="button" class="dateChoiceBtn" on:click|preventDefault={popUpDate}>
 					<img src={dateIcon} alt="calendar Icon" /> Select Date
 				</button>
 			</label>
@@ -85,6 +100,7 @@
 		background-color: white;
 		display: flex;
 		justify-content: center;
+		position: relative;
 	}
 	.reservationTopContainer {
 		display: flex;
