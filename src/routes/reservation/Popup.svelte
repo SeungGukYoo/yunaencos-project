@@ -4,12 +4,17 @@
 	import upArrowIcon from '$lib/images/icons/chevron-up.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
 	import deleteIcon from '$lib/images/icons/trash.svg';
-	
-	let isPopUp = 'off';
-	$: popUpState = 'off';
+	import { handlePopUp } from '../../store';
+
+	function closePopUp() {
+		handlePopUp.update((prev) => {
+			prev = false;
+			return prev;
+		});
+	}
 </script>
 
-<div class="popUp {popUpState}">
+<div class="popUp">
 	<div class="showDateContainer">
 		<div class="timeContainer">
 			<img src={timeIcon} alt="" />
@@ -60,12 +65,6 @@
 		border-radius: 5px;
 	}
 
-	.popUp.on {
-		display: block;
-	}
-	.popUp.off {
-		display: none;
-	}
 	.showDateContainer {
 		display: flex;
 		align-items: center;
