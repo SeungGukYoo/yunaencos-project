@@ -1,6 +1,12 @@
 <script lang="ts">
+	import { handlePopUp } from '../store';
 	import Title from './Title.svelte';
 	import './styles.css';
+
+	$: isPopUp = 'off';
+	handlePopUp.subscribe((value) => {
+		isPopUp = value ? 'on' : 'off';
+	});
 </script>
 
 <div class="app">
@@ -12,6 +18,7 @@
 	<footer>
 		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
 	</footer>
+	<div class="popUpBackground {isPopUp}" />
 </div>
 
 <style>
@@ -19,6 +26,19 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
+		position: relative;
+	}
+
+	.popUpBackground {
+		width: 100vw;
+		height: 100vh;
+		position: absolute;
+		z-index: -1;
+	}
+	.popUpBackground.on {
+		background-color: rgba(0, 0, 0, 0.3);
+		backdrop-filter: blur(3px);
+		z-index: 10;
 	}
 
 	main {
