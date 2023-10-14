@@ -50,4 +50,7 @@ export const reservationList: Array<ReservedData> = [
 ];
 
 const isNewAddReservation = '/';
+const isPopUpOn = false;
+
+export const handlePopUp = writable(isPopUpOn);
 export const handleMode = writable(isNewAddReservation);
