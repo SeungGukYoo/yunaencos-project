@@ -49,8 +49,19 @@ export const reservationList: Array<ReservedData> = [
 	}
 ];
 
+const currentReservationInfo: ReservedData = {
+	name: '',
+	phone: '',
+	reservedDate: '',
+	people: 0,
+	reservedTable: [],
+	reservedFloor: 0,
+	etc: ''
+};
+
 const isNewAddReservation = '/';
 const isPopUpOn = false;
 
+export const handleReservationInfo = writable(currentReservationInfo);
 export const handlePopUp = writable(isPopUpOn);
 export const handleMode = writable(isNewAddReservation);
