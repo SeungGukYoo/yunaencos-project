@@ -3,11 +3,13 @@
 	import minusIcon from '$lib/images/icons/math-minus.svg';
 	import plusIcon from '$lib/images/icons/math-plus.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
-	import { handlePopUp } from '../../store';
+	import { handlePopUp, handleReservationInfo } from '../../store';
 	import Popup from './Popup.svelte';
 
 	$: isPopUp = false;
+	$: dateMassage = 'Select Date';
 	let guestCount = 1;
+	let isSelectTable = false;
 
 	function inCreaseCount(e: MouseEvent) {
 		e.preventDefault();
@@ -31,6 +33,13 @@
 		});
 	}
 
+	function choiceTable() {
+		console.log(isSelectTable);
+		isSelectTable = !isSelectTable;
+	}
+	handleReservationInfo.subscribe((value) => {
+		dateMassage = value.reservedDate;
+	});
 	handlePopUp.subscribe((value) => (isPopUp = value));
 </script>
 
@@ -60,7 +69,8 @@
 			</label>
 			<label>
 				<button type="button" class="dateChoiceBtn" on:click|preventDefault={popUpDate}>
-					<img src={dateIcon} alt="calendar Icon" /> Select Date
+					<img src={dateIcon} alt="calendar Icon" />
+					{dateMassage}
 				</button>
 			</label>
 		</div>
@@ -72,20 +82,22 @@
 				<button class="countBtn" on:click={inCreaseCount}><img src={plusIcon} alt="" /></button>
 			</label>
 			<div class="dropdownContainer">
-				<div class="dropdownBtn">
+				<div class="dropdownBtn" on:click={choiceTable}>
 					<p>Select Table</p>
 					<img src={dropIcon} alt="" />
+					{#if !isSelectTable}
+						<ul class="tableListContainer">
+							<li value="1">Table 1</li>
+							<li value="2">Table 2</li>
+							<li value="3">Table 3</li>
+							<li value="4">Table 4</li>
+							<li value="5">Table 5</li>
+							<li value="6">Table 6</li>
+							<li value="7">Table 7</li>
+							<li value="8">Table 8</li>
+						</ul>
+					{/if}
 				</div>
-				<ul>
-					<li value="1">Table 1</li>
-					<li value="2">Table 2</li>
-					<li value="3">Table 3</li>
-					<li value="4">Table 4</li>
-					<li value="5">Table 5</li>
-					<li value="6">Table 6</li>
-					<li value="7">Table 7</li>
-					<li value="8">Table 8</li>
-				</ul>
 			</div>
 		</div>
 		<textarea class="textElement" name="" id="" cols="30" rows="10" placeholder="Add note" />
@@ -158,15 +170,28 @@
 		border: 1px solid gray;
 		padding-left: 24px;
 		padding-right: 24px;
+		position: relative;
 	}
-	.dropdownContainer ul {
-		list-style: none;
+	.tableListContainer {
 		position: absolute;
-		top: 25px;
+		top: 35.5px;
+		left: 0px;
 		width: 100%;
+		list-style: none;
 		text-align: center;
+		background-color: #eee;
+		border-left: 1px solid black;
+		border-right: 1px solid black;
+	}
 
-		display: none;
+	.tableListContainer li {
+		padding: 12px;
+		border-bottom: 1px solid black;
+	}
+	.tableListContainer li:last-child {
+		margin-bottom: 0;
+		padding: 12px;
+		border-bottom: 1px solid black;
 	}
 	.textElement {
 		width: 100%;
