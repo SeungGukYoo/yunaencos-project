@@ -1,13 +1,17 @@
 <script lang="ts">
 	import dropIcon from '$lib/images/icons/arrow_drop_down.svg';
+	import closeIcon from '$lib/images/icons/close.svg';
 	import minusIcon from '$lib/images/icons/math-minus.svg';
 	import plusIcon from '$lib/images/icons/math-plus.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
+	import { get } from 'svelte/store';
 	import { handlePopUp, handleReservationInfo } from '../../store';
 	import Popup from './Popup.svelte';
+	import TableList from './TableList.svelte';
 
 	$: isPopUp = false;
-	$: dateMassage = 'Select Date';
+	let dateMassage = get(handleReservationInfo).reservedDate;
+	let reservedTalbeInfo: number[] = get(handleReservationInfo).reservedTable;
 	let guestCount = 1;
 	let isSelectTable = false;
 
@@ -34,13 +38,19 @@
 	}
 
 	function choiceTable() {
-		console.log(isSelectTable);
 		isSelectTable = !isSelectTable;
 	}
-	handleReservationInfo.subscribe((value) => {
-		dateMassage = value.reservedDate;
+
+	const tableMessage = handleReservationInfo.subscribe((value) => {
+		reservedTalbeInfo = value.reservedTable;
 	});
-	handlePopUp.subscribe((value) => (isPopUp = value));
+	const dateMessage = handleReservationInfo.subscribe((value) => {
+		let { reservedDate } = value;
+		if (reservedDate === dateMassage) return;
+		dateMassage = reservedDate;
+	});
+
+	const popUpSubscribe = handlePopUp.subscribe((value) => (isPopUp = value));
 </script>
 
 <section class="addReservationContainer">
@@ -70,7 +80,11 @@
 			<label>
 				<button type="button" class="dateChoiceBtn" on:click|preventDefault={popUpDate}>
 					<img src={dateIcon} alt="calendar Icon" />
-					{dateMassage}
+					{#if dateMassage}
+						{dateMassage}
+					{:else}
+						Seleted Date
+					{/if}
 				</button>
 			</label>
 		</div>
@@ -82,20 +96,21 @@
 				<button class="countBtn" on:click={inCreaseCount}><img src={plusIcon} alt="" /></button>
 			</label>
 			<div class="dropdownContainer">
-				<div class="dropdownBtn" on:click={choiceTable}>
-					<p>Select Table</p>
-					<img src={dropIcon} alt="" />
-					{#if !isSelectTable}
-						<ul class="tableListContainer">
-							<li value="1">Table 1</li>
-							<li value="2">Table 2</li>
-							<li value="3">Table 3</li>
-							<li value="4">Table 4</li>
-							<li value="5">Table 5</li>
-							<li value="6">Table 6</li>
-							<li value="7">Table 7</li>
-							<li value="8">Table 8</li>
-						</ul>
+				<div class="dropdownBtn">
+					{#if reservedTalbeInfo.length}
+						<div class="tableContainer">
+							{#each reservedTalbeInfo as table}
+								<span>
+									Table {table} • Floor 1 <button><img src={closeIcon} alt="" /></button></span
+								>
+							{/each}
+						</div>
+					{:else}
+						<p>Select Table</p>
+					{/if}
+					<img class="dropDownIcon" src={dropIcon} alt="" on:click={choiceTable} />
+					{#if isSelectTable}
+						<TableList />
 					{/if}
 				</div>
 			</div>
@@ -124,6 +139,7 @@
 		padding: 12px 10px;
 		border: gray 1px solid;
 		border-radius: 7px;
+		width: 300px;
 	}
 
 	.dateChoiceBtn {
@@ -161,38 +177,56 @@
 		padding: 8px 10px;
 	}
 	.dropdownContainer {
+		width: 400px;
 		display: flex;
 	}
 	.dropdownBtn {
+		width: 100%;
 		display: flex;
 		justify-content: space-between;
-		width: 240px;
+
 		border: 1px solid gray;
 		padding-left: 24px;
 		padding-right: 24px;
 		position: relative;
 	}
-	.tableListContainer {
-		position: absolute;
-		top: 35.5px;
-		left: 0px;
+	.tableContainer {
+		display: flex;
+		overflow-y: scroll;
+		align-items: center;
+		gap: 10px;
+	}
+	.tableContainer span {
+		background-color: rgb(203, 203, 203);
+		border-radius: 10px;
+		padding: 4px 12px;
+		height: 24px;
+		font-size: 7px;
+		display: flex;
+		min-width: 120px;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.tableContainer button {
+		height: 17px;
+		width: 17px;
+		object-fit: contain;
+		border: none;
+		border-radius: 50%;
+	}
+	.tableContainer button img {
+		height: 100%;
 		width: 100%;
-		list-style: none;
-		text-align: center;
-		background-color: #eee;
-		border-left: 1px solid black;
-		border-right: 1px solid black;
+		object-fit: contain;
 	}
 
-	.tableListContainer li {
-		padding: 12px;
-		border-bottom: 1px solid black;
+	.dropdownBtn p {
+		display: flex;
 	}
-	.tableListContainer li:last-child {
-		margin-bottom: 0;
-		padding: 12px;
-		border-bottom: 1px solid black;
+	.dropDownIcon {
+		cursor: pointer;
 	}
+
 	.textElement {
 		width: 100%;
 		resize: none;
