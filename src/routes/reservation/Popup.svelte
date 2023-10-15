@@ -96,7 +96,7 @@
 			prev.reservedDate = fullDate;
 			return prev;
 		});
-		console.log(get(handleReservationInfo));
+
 		handlePopUp.update((prev) => (prev = false));
 	}
 </script>
