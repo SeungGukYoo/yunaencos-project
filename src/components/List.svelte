@@ -33,7 +33,10 @@
 	<ul class="listContainer">
 		{#if reservedData.length}
 			{#each reservedData as reservData, idx}
-				<li class="itemContainer" on:click|preventDefault={() => moveEditPage(reservData.id)}>
+				<li
+					class="itemContainer"
+					on:click|preventDefault|stopPropagation={() => moveEditPage(reservData.id)}
+				>
 					<div>
 						<div class="titleContainer">
 							<p class="userNameContainer">
@@ -61,13 +64,13 @@
 					<div class="btnContainer">
 						<button
 							class="deleteBtn"
-							on:click|preventDefault={() => deleteReservation(reservData.id)}
+							on:click|preventDefault|stopPropagation={() => deleteReservation(reservData.id)}
 						>
 							<img src={deleteBtn} alt="" />
 						</button>
 						<button
 							class="reserveBtn"
-							on:click|preventDefault={() => completedReservation(reservData.id)}
+							on:click|preventDefault|stopPropagation={() => completedReservation(reservData.id)}
 						>
 							Seated
 						</button>
