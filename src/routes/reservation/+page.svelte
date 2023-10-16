@@ -1,61 +1,37 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import dropIcon from '$lib/images/icons/arrow_drop_down.svg';
 	import closeIcon from '$lib/images/icons/close.svg';
 	import minusIcon from '$lib/images/icons/math-minus.svg';
 	import plusIcon from '$lib/images/icons/math-plus.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
-	import { get } from 'svelte/store';
 
-	import { goto } from '$app/navigation';
-	import { handlePopUp, handleReservationData, handleReservationInfo } from '../../store';
+	import { handleMode, handlePopUp, handleReservationData, type ReservedData } from '../../store';
 	import Popup from './Popup.svelte';
 	import TableList from './TableList.svelte';
-	let dateMassage = '';
-	let reservedTalbeInfo: number[] = [];
-	let guestCount = 1;
-	let reservationName = '';
-	let reservationPhone = '';
-	$: handleReservationInfo.update((prev) => {
-		if (!prev) return prev;
-		prev.people = guestCount;
-		return prev;
-	});
-	$: handleReservationInfo.update((prev) => {
-		if (!prev) return prev;
-		prev.etc = etcValue;
-		return prev;
-	});
-	$: handleReservationInfo.update((prev) => {
-		if (!prev) return prev;
-		prev.reservedDate = dateMassage;
-		return prev;
-	});
-	$: handleReservationInfo.update((prev) => {
-		if (!prev) return prev;
-		prev.name = reservationName;
-		return prev;
-	});
-	$: handleReservationInfo.update((prev) => {
-		if (!prev) return prev;
-		prev.phone = reservationPhone;
-		return prev;
-	});
+	const reservationObjInfo: ReservedData = {
+		name: '',
+		phone: '',
+		reservedDate: '',
+		people: 1,
+		reservedTable: [],
+		etc: ''
+	};
 
 	let isSelectTable = false;
-	let etcValue = '';
 	let isPopUp = false;
 
 	function inCreaseCount() {
-		if (guestCount === 99) {
+		if (reservationObjInfo.people === 99) {
 			alert('maximum guest count is 99');
 		}
-		guestCount += 1;
+		reservationObjInfo.people += 1;
 	}
 	function deCreaseCount() {
-		if (guestCount <= 1) {
+		if (reservationObjInfo.people <= 1) {
 			alert('minimum guest count is 1');
 		}
-		guestCount -= 1;
+		reservationObjInfo.people -= 1;
 	}
 	function popUpDate() {
 		if (isPopUp) return;
@@ -69,50 +45,55 @@
 		isSelectTable = !isSelectTable;
 	}
 	function deleteTable(deleteTableNumber: number) {
-		handleReservationInfo.update((prev) => {
-			let { reservedTable } = prev;
-			reservedTable = reservedTable.filter(
-				(tableNumber: number) => tableNumber !== deleteTableNumber
-			);
-			prev.reservedTable = reservedTable;
-			return prev;
-		});
+		reservationObjInfo.reservedTable = reservationObjInfo.reservedTable.filter(
+			(tableNum) => tableNum !== deleteTableNumber
+		);
+	}
+
+	function addTable(addTableNumber: number) {
+		console.log(addTableNumber);
+
+		if (reservationObjInfo.reservedTable.includes(addTableNumber + 1)) {
+			alert('aleady reserved table');
+			return;
+		}
+
+		reservationObjInfo.reservedTable = [...reservationObjInfo.reservedTable, addTableNumber + 1];
+	}
+
+	function saveDate(fullDate: string) {
+		reservationObjInfo.reservedDate = fullDate;
 	}
 
 	function validateForm() {
-		const { name, phone, reservedDate, people } = get(handleReservationInfo);
-		if (name.trim().length === 0) {
+		if (reservationObjInfo.name.trim().length === 0) {
 			throw Error('이름을 작성');
 		}
-		if (phone.trim().length === 0) {
+		if (reservationObjInfo.phone.trim().length === 0) {
 			throw Error('핸드폰 번호 작성');
 		}
-		if (reservedDate.length === 0) {
+		if (reservationObjInfo.reservedDate.length === 0) {
 			throw Error('예약일은 필수');
 		}
-		if (people === 0) {
+		if (reservationObjInfo.people === 0) {
 			throw Error('예약자는 1명 이상');
 		}
-
 		handleReservationData.update((prev) => {
-			let prevData = prev;
-			prevData = [...prevData, get(handleReservationInfo)];
-			console.log(prevData);
-			return prevData;
+			return [...prev, reservationObjInfo];
+		});
+		handleMode.update((prev) => {
+			prev = '/';
+			return prev;
 		});
 		goto('/');
 	}
-
-	const tableMessage = handleReservationInfo.subscribe((value) => {
-		if (value) reservedTalbeInfo = value.reservedTable;
-	});
 
 	const popUpSubscribe = handlePopUp.subscribe((value) => (isPopUp = value));
 </script>
 
 <section class="addReservationContainer">
 	{#if isPopUp}
-		<Popup />
+		<Popup {saveDate} />
 	{/if}
 	<form on:submit|preventDefault={validateForm}>
 		<div class="reservationTopContainer">
@@ -123,7 +104,7 @@
 					id="reservation-name"
 					placeholder="Name"
 					class="nameInputContainer"
-					bind:value={reservationName}
+					bind:value={reservationObjInfo.name}
 				/>
 			</label>
 			<label for="reservation-phone">
@@ -132,14 +113,14 @@
 					id="reservation-phone"
 					name="phone"
 					placeholder="Phoone"
-					bind:value={reservationPhone}
+					bind:value={reservationObjInfo.phone}
 				/>
 			</label>
 			<label>
 				<button type="button" class="dateChoiceBtn" on:click|preventDefault={popUpDate}>
 					<img src={dateIcon} alt="calendar Icon" />
-					{#if dateMassage}
-						{dateMassage}
+					{#if reservationObjInfo.reservedDate}
+						{reservationObjInfo.reservedDate}
 					{:else}
 						Seleted Date
 					{/if}
@@ -152,16 +133,16 @@
 				<button class="countBtn" on:click|preventDefault={deCreaseCount}
 					><img src={minusIcon} alt="" /></button
 				>
-				<span>{guestCount}</span>
+				<span>{reservationObjInfo.people}</span>
 				<button class="countBtn" on:click|preventDefault={inCreaseCount}
 					><img src={plusIcon} alt="" /></button
 				>
 			</label>
 			<div class="dropdownContainer">
 				<div class="dropdownBtn">
-					{#if reservedTalbeInfo && reservedTalbeInfo.length}
+					{#if reservationObjInfo.reservedTable.length}
 						<div class="tableContainer">
-							{#each reservedTalbeInfo as table}
+							{#each reservationObjInfo.reservedTable as table}
 								<span>
 									Table {table} • Floor 1
 									<button on:click|preventDefault={() => deleteTable(table)}
@@ -175,7 +156,7 @@
 					{/if}
 					<img class="dropDownIcon" src={dropIcon} alt="" on:click={choiceTable} />
 					{#if isSelectTable}
-						<TableList />
+						<TableList {addTable} />
 					{/if}
 				</div>
 			</div>
@@ -186,7 +167,7 @@
 			id=""
 			cols="30"
 			rows="10"
-			bind:value={etcValue}
+			bind:value={reservationObjInfo.etc}
 			placeholder="Add note"
 		/>
 		<div>
