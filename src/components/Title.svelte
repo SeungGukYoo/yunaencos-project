@@ -2,46 +2,27 @@
 	import addIcon from '$lib/images/icons/add.svg';
 	import cancelIcon from '$lib/images/icons/close.svg';
 	import backIcon from '$lib/images/icons/keyboard_backspace.svg';
+	export let movePath: string;
 
-	import { handleMode } from '../store';
-	let currentPath: string;
-
-	function handleReservedPage(path: string) {
-		if (path === window.location.pathname) return;
-		handleMode.update((prev) => (prev = path));
-		currentPath = path;
-	}
-
-	handleMode.subscribe((value) => {
-		if (!value) return;
-		currentPath = value;
-	});
+	export let title: string;
 </script>
 
 <section class="titleContainer">
 	<div class="btnContainer">
-		{#if currentPath === '/reservation'}
-			<a class="addBtn" href="/" on:click={() => handleReservedPage('/')}>
+		<a class="addBtn" href={movePath}>
+			{#if movePath === '/'}
 				<img src={backIcon} alt="back-icon" />
-			</a>
-		{:else}
-			<a class="addBtn" href="/reservation" on:click={() => handleReservedPage('/reservation')}>
+			{:else}
 				<img src={addIcon} alt="add-Icon" /> New Reservation
-			</a>
-		{/if}
+			{/if}
+		</a>
 	</div>
 
 	<div class="title">
-		{#if currentPath === '/reservation'}
-			<h1>New Reservation</h1>
-		{:else}
-			<h1>Reservation</h1>
-		{/if}
+		<h1>{title}</h1>
 	</div>
 
-	<a class="cancelBtn" href="/" on:click={() => handleReservedPage('/')}>
-		<img src={cancelIcon} alt="" /></a
-	>
+	<a class="cancelBtn" href="/"> <img src={cancelIcon} alt="" /></a>
 </section>
 
 <style>
