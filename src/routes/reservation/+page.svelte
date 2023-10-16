@@ -51,8 +51,6 @@
 	}
 
 	function addTable(addTableNumber: number) {
-		console.log(addTableNumber);
-
 		if (reservationObjInfo.reservedTable.includes(addTableNumber + 1)) {
 			alert('aleady reserved table');
 			return;
