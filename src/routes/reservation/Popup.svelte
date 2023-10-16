@@ -4,7 +4,7 @@
 	import upArrowIcon from '$lib/images/icons/chevron-up.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
 	import deleteIcon from '$lib/images/icons/trash.svg';
-	import { handlePopUp, handleReservationInfo } from '../../store';
+	import { handlePopUp } from '../../store';
 	type Calender = {
 		[key: string]: number;
 	};
@@ -24,6 +24,7 @@
 		Nov: 30,
 		Dec: 31
 	};
+	export let saveDate: (fullDate: string) => void;
 	let timeFocus = false;
 	let dateFocus = false;
 	let maxDay = Array.from({ length: 30 }, (_, idx) => idx + 1);
@@ -89,13 +90,9 @@
 		maxDay = Array.from({ length: calendar[choiceMonth] }, (_, idx) => idx + 1);
 		choiceDay = 1;
 	}
-	function saveDate() {
-		if (!isSaveDate) return;
-		handleReservationInfo.update((prev) => {
-			prev.reservedDate = fullDate;
-			return prev;
-		});
 
+	function addSaveData(fullData: string) {
+		saveDate(fullData);
 		handlePopUp.update((prev) => (prev = false));
 	}
 </script>
@@ -166,7 +163,7 @@
 		<button class="deleteButton" on:click|preventDefault={closePopUp}>
 			<img src={deleteIcon} alt="" />
 		</button>
-		<button class="addButton" on:click={saveDate}> Save </button>
+		<button class="addButton" on:click={() => addSaveData(fullDate)}> Save </button>
 	</div>
 </div>
 
