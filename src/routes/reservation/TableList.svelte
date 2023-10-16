@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { get } from 'svelte/store';
 	import { handleReservationInfo } from '../../store';
 
 	const allTable = Array.from({ length: 8 }, (_, idx) => `${idx + 1} Table`);
-	let reservedTable: number[] = [];
+
 	function addTalbe(idx: number) {
-		if (reservedTable.includes(idx)) {
+		let reservedTable = get(handleReservationInfo).reservedTable;
+		console.log(reservedTable);
+		if (reservedTable.includes(idx + 1)) {
 			alert('aleady reserved table');
 			return;
 		}
@@ -12,7 +15,6 @@
 			prev.reservedTable = [...prev.reservedTable, idx + 1];
 			return prev;
 		});
-		reservedTable.push(idx);
 	}
 </script>
 
