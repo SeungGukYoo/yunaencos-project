@@ -4,7 +4,6 @@
 	import upArrowIcon from '$lib/images/icons/chevron-up.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
 	import deleteIcon from '$lib/images/icons/trash.svg';
-	import { get } from 'svelte/store';
 	import { handlePopUp, handleReservationInfo } from '../../store';
 	type Calender = {
 		[key: string]: number;
