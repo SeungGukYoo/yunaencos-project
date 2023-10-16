@@ -16,30 +16,34 @@
 
 <section class="listSection">
 	<ul class="listContainer">
-		{#each reservedData as reservData}
-			<li class="itemContainer">
-				<div>
-					<div class="titleContainer">
-						<p class="userNameContainer">
-							{reservData.name}
+		{#if reservedData.length}
+			{#each reservedData as reservData}
+				<li class="itemContainer">
+					<div>
+						<div class="titleContainer">
+							<p class="userNameContainer">
+								{reservData.name}
+							</p>
+							<p class="phoneContainer"><img src={phoneIcon} alt="" /> {reservData.phone}</p>
+						</div>
+						<p class="dayContainer">
+							<img src={calendarIcon} alt="" />Today {reservData.reservedDate}
 						</p>
-						<p class="phoneContainer"><img src={phoneIcon} alt="" /> {reservData.phone}</p>
+						<p class="groupContainer"><img src={groupIcon} alt="" />{reservData.people}</p>
+						<p class="tableContainer">
+							Reserved Table: <b>{reservData.reservedTable}</b> · Floor 1
+						</p>
+						<p class="etcContainer">{reservData.etc} <img src={etcIcon} alt="" /></p>
 					</div>
-					<p class="dayContainer">
-						<img src={calendarIcon} alt="" />Today {reservData.reservedDate}
-					</p>
-					<p class="groupContainer"><img src={groupIcon} alt="" />{reservData.people}</p>
-					<p class="tableContainer">
-						Reserved Table: <b>{reservData.reservedTable}</b> · Floor 1
-					</p>
-					<p class="etcContainer">{reservData.etc} <img src={etcIcon} alt="" /></p>
-				</div>
-				<div class="btnContainer">
-					<button class="deleteBtn"><img src={deleteBtn} alt="" /></button>
-					<button class="reserveBtn">Seated</button>
-				</div>
-			</li>
-		{/each}
+					<div class="btnContainer">
+						<button class="deleteBtn"><img src={deleteBtn} alt="" /></button>
+						<button class="reserveBtn">Seated</button>
+					</div>
+				</li>
+			{/each}
+		{:else}
+			<h1>No Reservation!!</h1>
+		{/if}
 	</ul>
 </section>
 
@@ -60,6 +64,9 @@
 		padding: 20px;
 	}
 
+	.listContainer h1 {
+		grid-column: 2;
+	}
 	.itemContainer {
 		display: flex;
 		flex-direction: column;
