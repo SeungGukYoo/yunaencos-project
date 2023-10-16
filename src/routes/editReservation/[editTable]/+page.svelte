@@ -15,6 +15,7 @@
 		handleReservationData,
 		type ReservedData
 	} from '../../../store.js';
+	import { popUpDate } from '../../../util/popUpClient';
 
 	export let data;
 	const reservationObjInfo: ReservedData = data;
@@ -33,13 +34,6 @@
 			alert('minimum guest count is 1');
 		}
 		reservationObjInfo.people -= 1;
-	}
-	function popUpDate() {
-		if (isPopUp) return;
-		handlePopUp.update((prev: boolean) => {
-			prev = true;
-			return prev;
-		});
 	}
 
 	function choiceTable() {
@@ -123,7 +117,11 @@
 				/>
 			</label>
 			<label>
-				<button type="button" class="dateChoiceBtn" on:click|preventDefault={popUpDate}>
+				<button
+					type="button"
+					class="dateChoiceBtn"
+					on:click|preventDefault={() => popUpDate(isPopUp)}
+				>
 					<img src={dateIcon} alt="calendar Icon" />
 					{#if reservationObjInfo.reservedDate}
 						{reservationObjInfo.reservedDate}

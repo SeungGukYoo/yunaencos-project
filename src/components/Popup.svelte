@@ -5,6 +5,7 @@
 	import dateIcon from '$lib/images/icons/today.svg';
 	import deleteIcon from '$lib/images/icons/trash.svg';
 	import { handlePopUp } from '../store';
+	import { closePopUp } from '../util/popUpClient';
 	type Calender = {
 		[key: string]: number;
 	};
@@ -33,22 +34,18 @@
 	let currentTimePeriod = 0;
 	let choiceMonth: string = 'Sep';
 	let choiceDay: number = 1;
-	let isSaveDate = false;
+
 	$: fullDate =
 		choiceMonth +
 		' ' +
 		choiceDay +
-		',' +
+		', ' +
 		currentHour +
 		':' +
 		currentMinute +
+		' ' +
 		period[currentTimePeriod];
-	function closePopUp() {
-		handlePopUp.update((prev) => {
-			prev = false;
-			return prev;
-		});
-	}
+
 	function changeHour(hour: number) {
 		timeFocus = true;
 		dateFocus = false;
@@ -74,13 +71,11 @@
 		currentTimePeriod = changePeriodIdx;
 	}
 	function changeDate(isChangeDate: boolean) {
-		if (!isChangeDate) {
+		if (isChangeDate) {
+			dateFocus = false;
+		} else {
 			timeFocus = false;
 			dateFocus = true;
-			isSaveDate = false;
-		} else {
-			dateFocus = false;
-			isSaveDate = true;
 		}
 	}
 	function makeDays() {
@@ -131,9 +126,6 @@
 				>
 					{choiceMonth}
 					{choiceDay}
-					{#if !isSaveDate}
-						<pre class="warnMessage">날짜를 변경해주세요</pre>
-					{/if}
 				</p>
 			{/if}
 		</div>
