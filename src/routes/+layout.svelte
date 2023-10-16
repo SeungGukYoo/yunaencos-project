@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { handlePopUp } from '../store';
-	import Title from '../components/Title.svelte';
 	import './styles.css';
 
 	$: isPopUp = 'off';
@@ -11,7 +10,6 @@
 
 <div class="app">
 	<main>
-		<Title />
 		<slot />
 	</main>
 
