@@ -1,13 +1,17 @@
-<script>
-	import { get } from 'svelte/store';
+<script lang="ts">
 	import etcIcon from '../lib/images/icons/edit.svg';
 	import calendarIcon from '../lib/images/icons/event_available.svg';
 	import groupIcon from '../lib/images/icons/group.svg';
 	import phoneIcon from '../lib/images/icons/phone.svg';
 	import deleteBtn from '../lib/images/icons/trash.svg';
-	import { handleReservationData } from '../store';
+	import { handleReservationData, type ReservedData } from '../store';
 
-	const reservedData = get(handleReservationData);
+	let reservedData: ReservedData[] = [];
+
+	handleReservationData.subscribe((value) => {
+		reservedData = value;
+		return;
+	});
 </script>
 
 <section class="listSection">
