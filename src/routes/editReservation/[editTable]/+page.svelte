@@ -79,7 +79,6 @@
 		}
 		handleReservationData.update((prev) => {
 			let copyPrev = [...prev].map((table) => {
-				console.log(table.id, reservationObjInfo.id);
 				if (table.id === reservationObjInfo.id) {
 					return reservationObjInfo;
 				}
