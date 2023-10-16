@@ -12,12 +12,18 @@
 		reservedData = value;
 		return;
 	});
+
+	function deleteReservation(deleteNumber: number) {
+		handleReservationData.update((value) => {
+			return value.filter((_, tableNumber) => tableNumber !== deleteNumber);
+		});
+	}
 </script>
 
 <section class="listSection">
 	<ul class="listContainer">
 		{#if reservedData.length}
-			{#each reservedData as reservData}
+			{#each reservedData as reservData, idx}
 				<li class="itemContainer">
 					<div>
 						<div class="titleContainer">
@@ -44,7 +50,9 @@
 						</p>
 					</div>
 					<div class="btnContainer">
-						<button class="deleteBtn"><img src={deleteBtn} alt="" /></button>
+						<button class="deleteBtn" on:click|preventDefault={() => deleteReservation(idx)}
+							><img src={deleteBtn} alt="" /></button
+						>
 						<button class="reserveBtn">Seated</button>
 					</div>
 				</li>
