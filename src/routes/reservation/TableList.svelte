@@ -6,7 +6,7 @@
 
 	function addTalbe(idx: number) {
 		let reservedTable = get(handleReservationInfo).reservedTable;
-		console.log(reservedTable);
+
 		if (reservedTable.includes(idx + 1)) {
 			alert('aleady reserved table');
 			return;
