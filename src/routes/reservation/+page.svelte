@@ -58,6 +58,7 @@
 		}
 
 		reservationObjInfo.reservedTable = [...reservationObjInfo.reservedTable, addTableNumber + 1];
+		isSelectTable = false;
 	}
 
 	function saveDate(fullDate: string) {
@@ -261,6 +262,7 @@
 		min-width: 120px;
 		justify-content: space-between;
 		align-items: center;
+		margin: 12px 0;
 	}
 	.tableContainer button {
 		height: 17px;
