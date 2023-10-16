@@ -6,7 +6,6 @@ interface ReservedData {
 	reservedDate: string;
 	people: number;
 	reservedTable: number[];
-	reservedFloor: number;
 	etc: string;
 }
 
@@ -17,7 +16,6 @@ export const reservationList: Array<ReservedData> = [
 		reservedDate: '2:00 Pm',
 		people: 4,
 		reservedTable: [7, 8],
-		reservedFloor: 1,
 		etc: 'Birthday'
 	},
 	{
@@ -26,7 +24,6 @@ export const reservationList: Array<ReservedData> = [
 		reservedDate: '2:00 Pm',
 		people: 4,
 		reservedTable: [7, 8],
-		reservedFloor: 1,
 		etc: ''
 	},
 	{
@@ -35,7 +32,6 @@ export const reservationList: Array<ReservedData> = [
 		reservedDate: '2:00 Pm',
 		people: 4,
 		reservedTable: [7, 8],
-		reservedFloor: 1,
 		etc: ''
 	},
 	{
@@ -55,7 +51,6 @@ const currentReservationInfo: ReservedData = {
 	reservedDate: '',
 	people: 0,
 	reservedTable: [],
-	reservedFloor: 0,
 	etc: ''
 };
 
