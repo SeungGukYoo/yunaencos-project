@@ -1,6 +1,4 @@
 <script lang="ts">
-	export let data;
-
 	import { goto } from '$app/navigation';
 	import dropIcon from '$lib/images/icons/arrow_drop_down.svg';
 	import closeIcon from '$lib/images/icons/close.svg';
@@ -11,7 +9,14 @@
 	import TableList from '../../../components/TableList.svelte';
 
 	import Popup from '../../../components/Popup.svelte';
-	import { handleMode, handlePopUp, type ReservedData } from '../../../store.js';
+	import {
+		handleMode,
+		handlePopUp,
+		handleReservationData,
+		type ReservedData
+	} from '../../../store.js';
+
+	export let data;
 	const reservationObjInfo: ReservedData = data;
 
 	let isSelectTable = false;
@@ -72,9 +77,17 @@
 		if (reservationObjInfo.people === 0) {
 			throw Error('예약자는 1명 이상');
 		}
-		// handleReservationData.update((prev) => {
-		// 	let copyPrev = [...prev];
-		// });
+		handleReservationData.update((prev) => {
+			let copyPrev = [...prev].map((table) => {
+				console.log(table.id, reservationObjInfo.id);
+				if (table.id === reservationObjInfo.id) {
+					return reservationObjInfo;
+				}
+				return table;
+			});
+			prev = copyPrev;
+			return prev;
+		});
 		handleMode.update((prev) => {
 			prev = '/';
 			return prev;
