@@ -5,25 +5,52 @@
 	import plusIcon from '$lib/images/icons/math-plus.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
 	import { get } from 'svelte/store';
+
 	import { handlePopUp, handleReservationInfo } from '../../store';
 	import Popup from './Popup.svelte';
 	import TableList from './TableList.svelte';
-
-	$: isPopUp = false;
-	let dateMassage = get(handleReservationInfo).reservedDate;
-	let reservedTalbeInfo: number[] = get(handleReservationInfo).reservedTable;
+	let dateMassage = '';
+	let reservedTalbeInfo: number[] = [];
 	let guestCount = 1;
-	let isSelectTable = false;
+	let reservationName = '';
+	let reservationPhone = '';
+	$: handleReservationInfo.update((prev) => {
+		if (!prev) return prev;
+		prev.people = guestCount;
+		return prev;
+	});
+	$: handleReservationInfo.update((prev) => {
+		if (!prev) return prev;
+		prev.etc = etcValue;
+		return prev;
+	});
+	$: handleReservationInfo.update((prev) => {
+		if (!prev) return prev;
+		prev.reservedDate = dateMassage;
+		return prev;
+	});
+	$: handleReservationInfo.update((prev) => {
+		if (!prev) return prev;
+		prev.name = reservationName;
+		return prev;
+	});
+	$: handleReservationInfo.update((prev) => {
+		if (!prev) return prev;
+		prev.phone = reservationPhone;
+		return prev;
+	});
 
-	function inCreaseCount(e: MouseEvent) {
-		e.preventDefault();
+	let isSelectTable = false;
+	let etcValue = '';
+	let isPopUp = false;
+
+	function inCreaseCount() {
 		if (guestCount === 99) {
 			alert('maximum guest count is 99');
 		}
 		guestCount += 1;
 	}
-	function deCreaseCount(e: MouseEvent) {
-		e.preventDefault();
+	function deCreaseCount() {
 		if (guestCount <= 1) {
 			alert('minimum guest count is 1');
 		}
@@ -40,14 +67,35 @@
 	function choiceTable() {
 		isSelectTable = !isSelectTable;
 	}
+	function deleteTable(deleteTableNumber: number) {
+		handleReservationInfo.update((prev) => {
+			let { reservedTable } = prev;
+			reservedTable = reservedTable.filter(
+				(tableNumber: number) => tableNumber !== deleteTableNumber
+			);
+			prev.reservedTable = reservedTable;
+			return prev;
+		});
+	}
+
+	function validateForm() {
+		const { name, phone, reservedDate, people } = get(handleReservationInfo);
+		if (name.trim().length === 0) {
+			throw Error('이름을 작성');
+		}
+		if (phone.trim().length === 0) {
+			throw Error('핸드폰 번호 작성');
+		}
+		if (reservedDate.length === 0) {
+			throw Error('예약일은 필수')
+		}
+		if (people === 0) {
+			throw Error('예약자는 1명 이상');
+		}
+	}
 
 	const tableMessage = handleReservationInfo.subscribe((value) => {
-		reservedTalbeInfo = value.reservedTable;
-	});
-	const dateMessage = handleReservationInfo.subscribe((value) => {
-		let { reservedDate } = value;
-		if (reservedDate === dateMassage) return;
-		dateMassage = reservedDate;
+		if (value) reservedTalbeInfo = value.reservedTable;
 	});
 
 	const popUpSubscribe = handlePopUp.subscribe((value) => (isPopUp = value));
@@ -57,7 +105,7 @@
 	{#if isPopUp}
 		<Popup />
 	{/if}
-	<form>
+	<form on:submit|preventDefault={validateForm}>
 		<div class="reservationTopContainer">
 			<label for="reservation-name">
 				<input
@@ -66,6 +114,7 @@
 					id="reservation-name"
 					placeholder="Name"
 					class="nameInputContainer"
+					bind:value={reservationName}
 				/>
 			</label>
 			<label for="reservation-phone">
@@ -73,8 +122,8 @@
 					type="tel"
 					id="reservation-phone"
 					name="phone"
-					pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
 					placeholder="Phoone"
+					bind:value={reservationPhone}
 				/>
 			</label>
 			<label>
@@ -91,17 +140,24 @@
 		<div class="reservationMidContainer">
 			<label class="countContainer"
 				>Guest
-				<button class="countBtn" on:click={deCreaseCount}><img src={minusIcon} alt="" /></button>
+				<button class="countBtn" on:click|preventDefault={deCreaseCount}
+					><img src={minusIcon} alt="" /></button
+				>
 				<span>{guestCount}</span>
-				<button class="countBtn" on:click={inCreaseCount}><img src={plusIcon} alt="" /></button>
+				<button class="countBtn" on:click|preventDefault={inCreaseCount}
+					><img src={plusIcon} alt="" /></button
+				>
 			</label>
 			<div class="dropdownContainer">
 				<div class="dropdownBtn">
-					{#if reservedTalbeInfo.length}
+					{#if reservedTalbeInfo && reservedTalbeInfo.length}
 						<div class="tableContainer">
 							{#each reservedTalbeInfo as table}
 								<span>
-									Table {table} • Floor 1 <button><img src={closeIcon} alt="" /></button></span
+									Table {table} • Floor 1
+									<button on:click|preventDefault={() => deleteTable(table)}
+										><img src={closeIcon} alt="delete icon" /></button
+									></span
 								>
 							{/each}
 						</div>
@@ -115,9 +171,17 @@
 				</div>
 			</div>
 		</div>
-		<textarea class="textElement" name="" id="" cols="30" rows="10" placeholder="Add note" />
+		<textarea
+			class="textElement"
+			name=""
+			id=""
+			cols="30"
+			rows="10"
+			bind:value={etcValue}
+			placeholder="Add note"
+		/>
 		<div>
-			<button class="reservationBtn"> Save </button>
+			<button class="reservationBtn">Save</button>
 		</div>
 	</form>
 </section>
