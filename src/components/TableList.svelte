@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
-
 	const allTable = Array.from({ length: 8 }, (_, idx) => `${idx + 1} Table`);
 	export let addTable: (addTableNumber: number) => void;
 </script>
@@ -14,7 +12,8 @@
 <style>
 	.tableListContainer {
 		position: absolute;
-		top: 21px;
+
+		top: 33px;
 		left: 0px;
 		width: 100%;
 		list-style: none;
