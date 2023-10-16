@@ -6,7 +6,8 @@
 	import dateIcon from '$lib/images/icons/today.svg';
 	import { get } from 'svelte/store';
 
-	import { handlePopUp, handleReservationInfo } from '../../store';
+	import { goto } from '$app/navigation';
+	import { handlePopUp, handleReservationData, handleReservationInfo } from '../../store';
 	import Popup from './Popup.svelte';
 	import TableList from './TableList.svelte';
 	let dateMassage = '';
@@ -87,11 +88,19 @@
 			throw Error('핸드폰 번호 작성');
 		}
 		if (reservedDate.length === 0) {
-			throw Error('예약일은 필수')
+			throw Error('예약일은 필수');
 		}
 		if (people === 0) {
 			throw Error('예약자는 1명 이상');
 		}
+
+		handleReservationData.update((prev) => {
+			let prevData = prev;
+			prevData = [...prevData, get(handleReservationInfo)];
+			console.log(prevData);
+			return prevData;
+		});
+		goto('/');
 	}
 
 	const tableMessage = handleReservationInfo.subscribe((value) => {
