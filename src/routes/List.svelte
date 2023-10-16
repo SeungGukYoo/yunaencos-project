@@ -31,9 +31,17 @@
 						</p>
 						<p class="groupContainer"><img src={groupIcon} alt="" />{reservData.people}</p>
 						<p class="tableContainer">
-							Reserved Table: <b>{reservData.reservedTable}</b> · Floor 1
+							{#if reservData.reservedTable.length}
+								Reserved Table: <b>{reservData.reservedTable}</b> · Floor 1
+							{:else}
+								No Selected Table
+							{/if}
 						</p>
-						<p class="etcContainer">{reservData.etc} <img src={etcIcon} alt="" /></p>
+						<p class="etcContainer">
+							{#if reservData.etc.length}
+								{reservData.etc} <img src={etcIcon} alt="" />
+							{/if}
+						</p>
 					</div>
 					<div class="btnContainer">
 						<button class="deleteBtn"><img src={deleteBtn} alt="" /></button>
