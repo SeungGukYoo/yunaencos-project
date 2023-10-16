@@ -78,6 +78,7 @@
 	.itemContainer {
 		display: flex;
 		flex-direction: column;
+		justify-content: space-between;
 		flex-basis: 240px;
 		background-color: rgb(255, 255, 255);
 		padding: 14px 20px;
