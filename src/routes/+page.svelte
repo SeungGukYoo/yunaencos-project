@@ -1,5 +1,6 @@
 <script lang="ts">
 	import List from '../components/List.svelte';
+	import Title from '../components/Title.svelte';
 </script>
 
 <svelte:head>
@@ -8,6 +9,7 @@
 </svelte:head>
 
 <section class="main">
+	<Title movePath="/reservation" title="Reservation" />
 	<List />
 </section>
 
