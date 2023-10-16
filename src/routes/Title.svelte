@@ -19,15 +19,17 @@
 </script>
 
 <section class="titleContainer">
-	{#if currentPath === '/reservation'}
-		<a class="addBtn" href="/" on:click={() => handleReservedPage('/')}>
-			<img src={backIcon} alt="back-icon" />
-		</a>
-	{:else}
-		<a class="addBtn" href="/reservation" on:click={() => handleReservedPage('/reservation')}>
-			<img src={addIcon} alt="add-Icon" /> New Reservation
-		</a>
-	{/if}
+	<div class="btnContainer">
+		{#if currentPath === '/reservation'}
+			<a class="addBtn" href="/" on:click={() => handleReservedPage('/')}>
+				<img src={backIcon} alt="back-icon" />
+			</a>
+		{:else}
+			<a class="addBtn" href="/reservation" on:click={() => handleReservedPage('/reservation')}>
+				<img src={addIcon} alt="add-Icon" /> New Reservation
+			</a>
+		{/if}
+	</div>
 
 	<div class="title">
 		{#if currentPath === '/reservation'}
@@ -46,35 +48,42 @@
 	.titleContainer {
 		background-color: rgb(255, 255, 255);
 		position: relative;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	}
+
+	.btnContainer {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: center;
 	}
 	.addBtn {
-		margin-left: 10px;
-		flex-grow: 0;
-		background-color: rgb(251, 251, 251);
-		color: rgb(228, 62, 25);
-		font-size: 18px;
-		outline: none;
 		border: none;
 		border-radius: 8px;
-		padding: 18px 22px;
+		background-color: rgb(251, 251, 251);
+		font-size: 18px;
+		color: rgb(228, 62, 25);
+		outline: none;
 		display: flex;
 		align-items: center;
+		justify-content: center;
+		padding: 18px 22px;
 		box-shadow: 1px 1px 3px 1px rgba(66, 66, 66, 0.35);
 		cursor: pointer;
 	}
 
 	.cancelBtn {
-		flex-grow: 0;
 		border: none;
 		background-color: transparent;
 		margin-right: 12px;
+		grid-column: 5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.title {
-		flex-grow: 2;
 		margin: 0;
+		grid-column: 3;
 	}
 </style>
