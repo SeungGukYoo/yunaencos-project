@@ -1,42 +1,41 @@
 <script>
+	import { get } from 'svelte/store';
 	import etcIcon from '../lib/images/icons/edit.svg';
 	import calendarIcon from '../lib/images/icons/event_available.svg';
 	import groupIcon from '../lib/images/icons/group.svg';
 	import phoneIcon from '../lib/images/icons/phone.svg';
 	import deleteBtn from '../lib/images/icons/trash.svg';
-	import { reservationList } from '../store';
+	import { handleReservationData } from '../store';
 
-	const reservedData = reservationList;
+	const reservedData = get(handleReservationData);
 </script>
 
-<section class="itemListContainer">
-	<ul class="listContainer">
-		{#each reservedData as reservData}
-			<li class="itemContainer">
-				<div>
-					<div class="titleContainer">
-						<p class="userNameContainer">
-							{reservData.name}
-						</p>
-						<p class="phoneContainer"><img src={phoneIcon} alt="" /> {reservData.phone}</p>
-					</div>
-					<p class="dayContainer">
-						<img src={calendarIcon} alt="" />Today {reservData.reservedDate}
+<ul class="listContainer">
+	{#each reservedData as reservData}
+		<li class="itemContainer">
+			<div>
+				<div class="titleContainer">
+					<p class="userNameContainer">
+						{reservData.name}
 					</p>
-					<p class="groupContainer"><img src={groupIcon} alt="" />{reservData.people}</p>
-					<p class="tableContainer">
-						Reserved Table: <b>{reservData.reservedTable}</b> · Floor {reservData.reservedFloor}
-					</p>
-					<p class="etcContainer">{reservData.etc} <img src={etcIcon} alt="" /></p>
+					<p class="phoneContainer"><img src={phoneIcon} alt="" /> {reservData.phone}</p>
 				</div>
-				<div class="btnContainer">
-					<button class="deleteBtn"><img src={deleteBtn} alt="" /></button>
-					<button class="reserveBtn">Seated</button>
-				</div>
-			</li>
-		{/each}
-	</ul>
-</section>
+				<p class="dayContainer">
+					<img src={calendarIcon} alt="" />Today {reservData.reservedDate}
+				</p>
+				<p class="groupContainer"><img src={groupIcon} alt="" />{reservData.people}</p>
+				<p class="tableContainer">
+					Reserved Table: <b>{reservData.reservedTable}</b> · Floor 1
+				</p>
+				<p class="etcContainer">{reservData.etc} <img src={etcIcon} alt="" /></p>
+			</div>
+			<div class="btnContainer">
+				<button class="deleteBtn"><img src={deleteBtn} alt="" /></button>
+				<button class="reserveBtn">Seated</button>
+			</div>
+		</li>
+	{/each}
+</ul>
 
 <style>
 	ul,
@@ -46,6 +45,7 @@
 	}
 
 	.listContainer {
+		min-height: 500px;
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
 		gap: 15px;
