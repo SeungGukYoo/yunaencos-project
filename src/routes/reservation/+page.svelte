@@ -6,10 +6,11 @@
 	import plusIcon from '$lib/images/icons/math-plus.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
 
+	import Popup from '../../components/Popup.svelte';
+	import TableList from '../../components/TableList.svelte';
 	import { handleMode, handlePopUp, handleReservationData, type ReservedData } from '../../store';
-	import Popup from './Popup.svelte';
-	import TableList from './TableList.svelte';
 	const reservationObjInfo: ReservedData = {
+		id: 0,
 		name: '',
 		phone: '',
 		reservedDate: '',
@@ -76,6 +77,8 @@
 		if (reservationObjInfo.people === 0) {
 			throw Error('예약자는 1명 이상');
 		}
+
+		reservationObjInfo.id = Date.now();
 		handleReservationData.update((prev) => {
 			return [...prev, reservationObjInfo];
 		});

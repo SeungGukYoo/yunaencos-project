@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { handlePopUp } from '../store';
-	import Title from './Title.svelte';
+	import Title from '../components/Title.svelte';
 	import './styles.css';
 
 	$: isPopUp = 'off';
