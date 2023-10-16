@@ -40,7 +40,6 @@ export const reservationList: Array<ReservedData> = [
 		reservedDate: '2:00 Pm',
 		people: 4,
 		reservedTable: [7, 8],
-		reservedFloor: 1,
 		etc: ''
 	}
 ];
