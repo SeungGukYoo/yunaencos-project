@@ -10,9 +10,7 @@ export interface ReservedData {
 	etc: string;
 }
 
-export const reservationList: Array<ReservedData> = [
-	{ id: 1, name: '1', phone: '1', reservedDate: '1', people: 1, reservedTable: [1], etc: '1' }
-];
+export const reservationList: Array<ReservedData> = [];
 
 const isNewAddReservation = '/';
 const isPopUpOn = false;
