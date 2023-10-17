@@ -5,92 +5,44 @@
 	import minusIcon from '$lib/images/icons/math-minus.svg';
 	import plusIcon from '$lib/images/icons/math-plus.svg';
 	import dateIcon from '$lib/images/icons/today.svg';
-
 	import Popup from '../../components/Popup.svelte';
 	import TableList from '../../components/TableList.svelte';
-	import { handleMode, handlePopUp, handleReservationData, type ReservedData } from '../../store';
-	const reservationObjInfo: ReservedData = {
-		id: 0,
-		name: '',
-		phone: '',
-		reservedDate: '',
-		people: 1,
-		reservedTable: [],
-		etc: ''
-	};
+	import { handlePopUp, handleReservationData, type ReservedData } from '../../store';
+	import { popUpDate } from '../../util/popUpClient';
+	import { ReservationData } from '../../util/reservationClient';
 
+	const reservationClient = new ReservationData();
+	let reservation: ReservedData;
 	let isSelectTable = false;
 	let isPopUp = false;
 
-	function inCreaseCount() {
-		if (reservationObjInfo.people === 99) {
-			alert('maximum guest count is 99');
-		}
-		reservationObjInfo.people += 1;
-	}
-	function deCreaseCount() {
-		if (reservationObjInfo.people <= 1) {
-			alert('minimum guest count is 1');
-		}
-		reservationObjInfo.people -= 1;
-	}
-	function popUpDate() {
-		if (isPopUp) return;
-		handlePopUp.update((prev: boolean) => {
-			prev = true;
-			return prev;
-		});
-	}
+	let reservationInfo = reservationClient.getData();
+	reservationInfo.subscribe((prevReservation) => {
+		reservation = prevReservation;
+	});
+	handlePopUp.subscribe((value) => (isPopUp = value));
 
 	function choiceTable() {
 		isSelectTable = !isSelectTable;
 	}
-	function deleteTable(deleteTableNumber: number) {
-		reservationObjInfo.reservedTable = reservationObjInfo.reservedTable.filter(
-			(tableNum) => tableNum !== deleteTableNumber
-		);
-	}
 
 	function addTable(addTableNumber: number) {
-		if (reservationObjInfo.reservedTable.includes(addTableNumber + 1)) {
-			alert('aleady reserved table');
-			return;
-		}
-
-		reservationObjInfo.reservedTable = [...reservationObjInfo.reservedTable, addTableNumber + 1];
+		reservationClient.addTable(addTableNumber);
 		isSelectTable = false;
 	}
 
 	function saveDate(fullDate: string) {
-		reservationObjInfo.reservedDate = fullDate;
+		reservationClient.updateDate(fullDate);
 	}
 
 	function validateForm() {
-		if (reservationObjInfo.name.trim().length === 0) {
-			throw Error('이름을 작성');
+		if (reservationClient.validateReservation()) {
+			handleReservationData.update((prev) => {
+				return [...prev, reservation];
+			});
+			goto('/');
 		}
-		if (reservationObjInfo.phone.trim().length === 0) {
-			throw Error('핸드폰 번호 작성');
-		}
-		if (reservationObjInfo.reservedDate.length === 0) {
-			throw Error('예약일은 필수');
-		}
-		if (reservationObjInfo.people === 0) {
-			throw Error('예약자는 1명 이상');
-		}
-
-		reservationObjInfo.id = Date.now();
-		handleReservationData.update((prev) => {
-			return [...prev, reservationObjInfo];
-		});
-		handleMode.update((prev) => {
-			prev = '/';
-			return prev;
-		});
-		goto('/');
 	}
-
-	const popUpSubscribe = handlePopUp.subscribe((value) => (isPopUp = value));
 </script>
 
 <section class="addReservationContainer">
@@ -106,23 +58,27 @@
 					id="reservation-name"
 					placeholder="Name"
 					class="nameInputContainer"
-					bind:value={reservationObjInfo.name}
+					on:input={(e) => reservationClient.updateName(e.currentTarget.value)}
 				/>
 			</label>
 			<label for="reservation-phone">
 				<input
-					type="tel"
+					type="text"
 					id="reservation-phone"
 					name="phone"
 					placeholder="Phoone"
-					bind:value={reservationObjInfo.phone}
+					on:input={(e) => reservationClient.updatePhone(e.currentTarget.value)}
 				/>
 			</label>
 			<label>
-				<button type="button" class="dateChoiceBtn" on:click|preventDefault={popUpDate}>
+				<button
+					type="button"
+					class="dateChoiceBtn"
+					on:click|preventDefault={() => popUpDate(isPopUp)}
+				>
 					<img src={dateIcon} alt="calendar Icon" />
-					{#if reservationObjInfo.reservedDate}
-						{reservationObjInfo.reservedDate}
+					{#if reservation.reservedDate}
+						{reservation.reservedDate}
 					{:else}
 						Seleted Date
 					{/if}
@@ -132,22 +88,22 @@
 		<div class="reservationMidContainer">
 			<label class="countContainer"
 				>Guest
-				<button class="countBtn" on:click|preventDefault={deCreaseCount}
+				<button class="countBtn" on:click|preventDefault={() => reservationClient.deCreaseCount()}
 					><img src={minusIcon} alt="" /></button
 				>
-				<span>{reservationObjInfo.people}</span>
-				<button class="countBtn" on:click|preventDefault={inCreaseCount}
+				<span>{reservation.people}</span>
+				<button class="countBtn" on:click|preventDefault={() => reservationClient.inCreaseCount()}
 					><img src={plusIcon} alt="" /></button
 				>
 			</label>
 			<div class="dropdownContainer">
 				<div class="dropdownBtn">
-					{#if reservationObjInfo.reservedTable.length}
+					{#if reservation.reservedTable.length}
 						<div class="tableContainer">
-							{#each reservationObjInfo.reservedTable as table}
+							{#each reservation.reservedTable as table}
 								<span>
 									Table {table} • Floor 1
-									<button on:click|preventDefault={() => deleteTable(table)}
+									<button on:click|preventDefault={() => reservationClient.deleteTable(table)}
 										><img src={closeIcon} alt="delete icon" /></button
 									></span
 								>
@@ -169,8 +125,8 @@
 			id=""
 			cols="30"
 			rows="10"
-			bind:value={reservationObjInfo.etc}
 			placeholder="Add note"
+			on:input={(e) => reservationClient.updateEtc(e.currentTarget.value)}
 		/>
 		<div>
 			<button class="reservationBtn">Save</button>
