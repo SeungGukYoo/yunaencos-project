@@ -21,9 +21,6 @@
 		isSelectTable = !isSelectTable;
 	}
 
-	function saveDate(fullDate: string) {
-		reservationClient.updateDate(fullDate);
-	}
 	function addTable(addTableNumber: number) {
 		reservationClient.addTable(addTableNumber);
 		isSelectTable = false;
