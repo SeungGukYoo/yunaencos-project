@@ -13,6 +13,7 @@ src
 ├── src/app.d.ts
 ├── src/app.html
 ├── src/components
+│   ├── src/components/Form.svelte
 │   ├── src/components/List.svelte
 │   ├── src/components/Popup.svelte
 │   ├── src/components/TableList.svelte
@@ -60,6 +61,10 @@ src
 
   ![ezgif com-video-to-gif (7)](https://github.com/SeungGukYoo/yunaencos-project/assets/119836116/bb03806f-04e0-41a8-bbb2-fe4928688cb3)
 
+- 기본 정보(이름, 핸드폰 번호, 예약 날짜, 인원)를 입력하지 않았을 경우
+
+  <img width="541" alt="스크린샷 2023-10-17 오후 7 41 25" src="https://github.com/SeungGukYoo/yunaencos-project/assets/119836116/4589980e-66f5-4ac2-8312-78535106fa31">
+
 ## 5. 배포 링크
 
 배포 링크 : [Vercel 바로가기](https://manage-reservation.vercel.app/)
@@ -85,6 +90,7 @@ Svlete와 SvelteKit을 사용해본 경험이 없기 때문에 Svelte와 SvelteK
    - `Selected Date`버튼과 `Selected Table`의 아이콘을 클릭하면 날짜, 시간을 선택할 수 있는 팝업과 테이블을 선택할 수 있는 팝업이 나오게 된다.
    - 날짜를 선택할 수 있는 팝업에는 시간과 월/일을 선택할 수 있는 옵션이 있다.
    - 저장 버튼을 누르면 입력된 값을 바탕으로 값이 저장되고, 홈페이지에서는 저장된 값을 바탕으로 정렬해서 보여준다.
+   - 기본 정보(이름, 핸드폰 번호, 인원, 날짜)를 작성하지 않으면 에러 반환
 2. 예약 종료 및 예약 삭제
    - `Seated` 버튼을 클릭하게 되면 예약이 종료된 것이라고 판단해 리스트에서 사라지게 된다.(실제로는 데이터에서는 사라지지 않게 된다.)
    - 쓰레기통 아이콘을 클릭하게 되면 예약이 취소된 것이라고 판단해 리스트에서 사라지게 된다.(실제 데이터 저장소에서 제거된다.)
@@ -262,13 +268,3 @@ export function load({ params }) {
 	throw error(404, 'Not found');
 }
 ```
-
-### 8. 보충해야 하는 점
-
-`Svelte`를 처음 사용해봤기 때문에 `React`와 `Next.js`에서 사용해왔던 함수들과 로직들을 `Svelte`에서는 어떻게 작성해야 하는지 학습하기에 짧은 시간으로 인해 중복된 코드들과 아쉬운 로직들이 많이 존재했습니다.
-
-#### 8-1. 공통 레이아웃
-
-타이틀 컴포넌트와 예약 추가, 수정 컴포넌트는 재사용되기 때문에 때문에 이를 공통 레이아웃 파일로 설정하는 것이 코드의 중복을 피할 수 있습니다.
-예륻들어 `<Title/>` 컴포넌트의 경우 마운트되기 전 useEffect를 통해서 경로를 감지하여 컴포넌트에 적절한 제목과 이동시켜야 할 경로를 설정할 수 있으며, Context API를 사용하여 UI관련 데이터만 다룸으로 써 UI 로직의 중복을 피할 수 있습니다.
-<br>
